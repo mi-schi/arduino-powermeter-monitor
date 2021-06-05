@@ -6,7 +6,7 @@
 #include <RTClib.h>
 
 RTC_DS1307 rtc;
-LiquidCrystal lcd(A0, A1, A2, A3, A6, A7);
+LiquidCrystal lcd(A0, A1, A2, A3, 6, 7);
 Adafruit_MCP3008 adc[2];
 const float ARDUINO_VOLT = 4.7;
 const byte SENSOR_LOOP = 5;
@@ -30,15 +30,15 @@ struct ACS {
 };
 
 ACS acss[ACS_COUNT] = {
-  {0, 3, ACS_5A, 508},
+  {0, 3, ACS_5A, 508}, // 1
   {0, 2, ACS_5A, 505},
   {0, 1, ACS_20A, 509},
-  {1, 0, ACS_20A, 508},
+  {1, 0, ACS_20A, 508}, // 4
   {1, 1, ACS_20A, 508},
   {1, 2, ACS_20A, 508},
   {1, 3, ACS_5A, 505},
   {1, 4, ACS_5A, 505},
-  {1, 5, ACS_5A, 506},
+  {1, 5, ACS_5A, 506}, // 9
   {0, 4, ACS_5A, 509},
   {0, 5, ACS_5A, 509},
   {0, 6, ACS_5A, 508},
@@ -215,14 +215,11 @@ void appendPowerCSV(float volt, float amperes[ACS_COUNT]) {
   if (powerFile) {
     DateTime now = rtc.now();
 
-    char dateTime[19] = {
-      now.day(), ".", now.month(), ".", now.year(), " ",
-      now.hour(), ":", now.minute(), ":", now.second()
-    };
+    char dateTime[] = "DD.MM.YYYY hh:mm:ss";
 
-    Serial.print(dateTime);
-    powerFile.print(dateTime);
-    
+    Serial.print(now.toString(dateTime));
+    powerFile.print(now.toString(dateTime));
+
     Serial.print(";");
     Serial.print(volt);
     
